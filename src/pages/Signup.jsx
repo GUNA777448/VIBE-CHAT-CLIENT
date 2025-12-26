@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaFacebookF, FaTwitter, FaGoogle, FaApple } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ export default function Signup() {
           password: formData.password,
         }),
       });
-      
+
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || "Signup failed");
@@ -58,12 +58,12 @@ export default function Signup() {
   };
 
   return (
-    <div className="w-screen h-[100vh] bg-[#f5ccd4] flex flex-col text-center justify-center">
+    <div className="w-screen h-screen bg-[#BDE8F5] flex flex-col text-center justify-center">
       <div className="h-[70%] flex flex-col text-center justify-evenly">
         {/* Back button */}
         <button
           onClick={() => navigate("/")}
-          className="w-[80px] h-[35px] rounded-full bg-black/30 px-4 py-2 text-sm text-white backdrop-blur ml-[10px]
+          className="w-20 h-8.75 rounded-full bg-black/30 px-4 py-2 text-sm text-white backdrop-blur ml-2.5
              transition-all duration-300 cursor-pointer
              hover:bg-black/50 hover:-translate-y-[2px]
              hover:shadow-[0_6px_15px_rgba(0,0,0,0.2)] border-none"
@@ -74,23 +74,24 @@ export default function Signup() {
         {/* Main Card */}
         <div
           className="
-          h-[500px] w-[calc(100vw-20px)] max-w-[800px] bg-white rounded-[30px] shadow-xl overflow-hidden
-          mx-auto
-          flex flex-col
-          min-[500px]:flex-row
-          "
+            h-full w-[calc(100vw-20px)] max-w-200 bg-white rounded-[30px] shadow-xl overflow-hidden
+            mx-auto
+            flex flex-col
+            min-[500px]:flex-row
+             "
         >
           {/* Left Panel (Desktop only) */}
           <form
             onSubmit={handleSubmit}
             className="
             w-full
+            h-full
             min-[500px]:w-1/2
-            px-6 py-8
+            px-6 
             bg-[white]
             "
           >
-            <h2 className="text-center lg:text-left text-xl sm:text-2xl font-semibold text-[#4b6cff] mb-5 mt-[70px]  ">
+            <h2 className="text-center lg:text-left text-xl sm:text-2xl font-semibold text-[#1C4D8D] mb-5 mt-[20px]  ">
               Get Started
             </h2>
             {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
@@ -144,36 +145,26 @@ export default function Signup() {
               {loading ? "Signing up..." : "Sign up"}
             </button>
 
-            {/* Social Login */}
-            <div className="w-[75%] my-[20px] flex text-center justify-around mx-auto ">
-              <button
-                className="h-[42px] w-[42px] text-[20px] border-none flex items-center justify-center rounded-full bg-[#1877f2] text-white hover:-translate-y-[2px] hover:shadow-[0_6px_15px_rgba(0,0,0,0.2)] transition cursor-pointer"
-                aria-label="Facebook"
-              >
-                <FaFacebookF className="text-white" />
-              </button>
-              <button
-                className="h-[42px] w-[42px] text-[20px] border-none flex items-center justify-center rounded-full bg-[#1da1f2] text-white hover:-translate-y-[2px] hover:shadow-[0_6px_15px_rgba(0,0,0,0.2)] transition cursor-pointer"
-                aria-label="Twitter"
-              >
-                <FaTwitter className="text-white" />
-              </button>
-              <button
-                className="h-[42px] w-[42px] text-[20px] border-none flex items-center justify-center rounded-full bg-[#db4437] text-white hover:-translate-y-[2px] hover:shadow-[0_6px_15px_rgba(0,0,0,0.2)] transition cursor-pointer"
-                aria-label="Google"
-              >
-                <FaGoogle className="text-white" />
-              </button>
-              <button
-                className="h-[42px] w-[42px] text-[20px] border-none flex items-center justify-center rounded-full bg-black text-white hover:-translate-y-[2px] hover:shadow-[0_6px_15px_rgba(0,0,0,0.2)] transition cursor-pointer"
-                aria-label="Apple"
-              >
-                <FaApple className="text-white" />
-              </button>
+            {/* Divider for social login */}
+            <div className="flex items-center w-[80%] mx-auto my-2">
+              <div className="flex-grow border-t border-gray-300"></div>
+              <span className="flex-shrink mx-4 text-gray-500 text-sm">
+                or continue with
+              </span>
+              <div className="flex-grow border-t border-gray-300"></div>
             </div>
 
+            {/* Google Sign Up Button */}
+            <button
+              type="button"
+              className="w-[80%] mx-auto flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-full hover:bg-gray-50 transition"
+            >
+              <FaGoogle />
+              <span>Sign up with Google</span>
+            </button>
+
             {/* Signup Link */}
-            <p className="mt-[25px] mb-[50px] text-center text-[18px]">
+            <p className="mt-[25px] mb-[50px] text-center text-stone-900 text-[18px]">
               Already have an account?{" "}
               <span
                 onClick={() => navigate("/login")}

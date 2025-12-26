@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaFacebookF, FaTwitter, FaGoogle, FaApple } from "react-icons/fa";
@@ -8,14 +7,13 @@ export default function Login() {
 
   return (
     <motion.div
-      className="w-screen h-[100vh] bg-[#f5ccd4] flex flex-col text-center justify-center"
-        initial= { {opacity: 0, y: 20 }}
-        animate= {{ opacity: 1, y: 0 }}
-        exit= {{opacity: 0, y: -20 }}
-        transition={{ duration: 0.35, ease: "easeInOut" }}
-      >
+      className="w-screen h-[100vh] bg-[#BDE8F5] flex flex-col text-center justify-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.35, ease: "easeInOut" }}
+    >
       <div className="h-[70%] flex flex-col text-center justify-evenly">
-
         {/* Back button */}
         <button
           onClick={() => navigate("/")}
@@ -49,19 +47,19 @@ export default function Login() {
               min-[500px]:flex
               min-[500px]:w-1/2
               h-full
-              bg-[#4b6cff]
+              bg-[#1C4D8D]
               flex-col
               justify-center
               px-10
               text-[white]
             "
           >
-            <h1 className="text-3xl xl:text-4xl font-semibold leading-tight mb-4 text-left ml-[20px]">
-              Hello,<br />welcome!
-            </h1>
-            <p className="text-sm text-white/90 max-w-xs m-[20px]">
-              A calm corner of the internet for real, unfiltered conversations.
-            </p>
+            <div className="flex flex-col items-center">
+              <h1 className="text-white text-3xl xl:text-4xl font-semibold leading-tight mb-4 text-left ml-[20px]">
+                Welcome Back !{" "}
+              </h1>
+              <p className="text-white">Let's Vibe together </p>
+            </div>
           </div>
 
           {/* Right Panel */}
@@ -69,18 +67,18 @@ export default function Login() {
             className="
               w-full
               min-[500px]:w-1/2
-              px-6 py-8
+              px-6 py-4
               bg-[white]
             "
           >
-            <h2 className="text-center lg:text-left text-xl sm:text-2xl font-semibold text-[#4b6cff] mb-5 mt-[100px]">
+            <h2 className="text-center lg:text-left text-xl sm:text-2xl font-semibold text-[#1C4D8D] mb-5 mt-[30px]">
               Welcome back
             </h2>
 
             <input
               placeholder="Email"
               className="w-[75%] mb-4 border border-gray-300 text-sm sm:text-base
-              focus:outline-none focus:border-[#4b6cff]
+              focus:outline-none focus:border-[#4988C4]
               p-[12px] m-[10px] rounded-[10px]"
             />
 
@@ -89,20 +87,23 @@ export default function Login() {
               placeholder="Password"
               className="w-[75%] mb-4 rounded-[10px]
               border border-gray-300 text-sm sm:text-base
-              focus:outline-none focus:border-[#4b6cff]
+              focus:outline-none focus:border-[#4988C4]
               p-[12px]"
             />
 
             {/* Remember + Forgot */}
             <div className="w-[80%] mt-[10px] mb-[20px] mx-auto flex items-center justify-between text-sm ">
               <label className="flex items-center gap-2">
-                <input type="checkbox" className="accent-[#4b6cff] cursor-pointer" />
+                <input
+                  type="checkbox"
+                  className="accent-[#4988C4] cursor-pointer"
+                />
                 <span>Remember me</span>
               </label>
 
               <span
                 onClick={() => navigate("/forgot")}
-                className="cursor-pointer text-[#4b6cff] hover:underline"
+                className="text-[#4988C4] cursor-pointer hover:underline"
               >
                 Forgot password?
               </span>
@@ -119,18 +120,15 @@ export default function Login() {
 
             {/* Social Login */}
             <div className="w-[75%] my-[20px] flex justify-around mx-auto">
-              <button className="h-[42px] w-[42px] text-[20px] border-none flex items-center justify-center rounded-full bg-[#1877f2] text-white hover:-translate-y-[2px] hover:shadow-[0_6px_15px_rgba(0,0,0,0.2)] transition cursor-pointer">
-                <FaFacebookF />
-              </button>
-              <button className="h-[42px] w-[42px] text-[20px] border-none flex items-center justify-center rounded-full bg-[#1da1f2] text-white hover:-translate-y-[2px] hover:shadow-[0_6px_15px_rgba(0,0,0,0.2)] transition cursor-pointer">
-                <FaTwitter />
-              </button>
-              <button className="h-[42px] w-[42px] text-[20px] border-none flex items-center justify-center rounded-full bg-[#db4437] text-white hover:-translate-y-[2px] hover:shadow-[0_6px_15px_rgba(0,0,0,0.2)] transition cursor-pointer">
-                <FaGoogle />
-              </button>
-              <button className="h-[42px] w-[42px] text-[20px] border-none flex items-center justify-center rounded-full bg-black text-white hover:-translate-y-[2px] hover:shadow-[0_6px_15px_rgba(0,0,0,0.2)] transition cursor-pointer">
-                <FaApple />
-              </button>
+           
+                   <button
+              type="button"
+              className="w-[100vh] mx-auto flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-full hover:bg-gray-50 transition"
+            >
+              <FaGoogle />
+              <span> Sign up with Google</span>
+            </button>
+          
             </div>
 
             {/* Signup Link */}
