@@ -10,7 +10,8 @@ export default function Signup() {
     password: "",
     agreeToTerms: false,
   });
-  const [loading, setLoading] = useState(false);
+ const {login , loading, setLoading} = useState(false);
+ const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -43,11 +44,14 @@ export default function Signup() {
           password: formData.password,
         }),
       });
-
+      console.log(isAuthenticated,login);
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || "Signup failed");
       }
+      const { user, token } = data;
+      login(user, token);
+
       // Signup successful - navigate to login or home
       navigate("/login");
     } catch (err) {
@@ -56,7 +60,6 @@ export default function Signup() {
       setLoading(false);
     }
   };
-
   return (
     <div className="w-screen h-screen bg-[#BDE8F5] flex flex-col text-center justify-center">
       <div className="h-[70%] flex flex-col text-center justify-evenly">

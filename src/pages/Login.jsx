@@ -40,6 +40,7 @@ export default function Login() {
             min-[500px]:flex-row
           "
         >
+          
           {/* Left Panel (Desktop only) */}
           <div
             className="
