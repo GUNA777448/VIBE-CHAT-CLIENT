@@ -1,7 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useAuthStore from "../stores/useAuthStore";
 import { FaGoogle } from "react-icons/fa";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function Signup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -10,9 +12,15 @@ export default function Signup() {
     password: "",
     agreeToTerms: false,
   });
- const {login , loading, setLoading} = useState(false);
- const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [error, setError] = useState("");
+
+  // Use Zustand store instead of local state
+  const { login, setLoading, loading, isAuthenticated } = useAuthStore();
+
+  // Auto-redirect if already authenticated
+  React.useEffect(() => {
+    if (isAuthenticated) navigate("/profile");
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -44,46 +52,40 @@ export default function Signup() {
           password: formData.password,
         }),
       });
-      console.log(isAuthenticated,login);
+
       const data = await response.json();
+
       if (!response.ok) {
         throw new Error(data.message || "Signup failed");
       }
-      const { user, token } = data;
-      login(user, token);
 
-      // Signup successful - navigate to login or home
-      navigate("/login");
+      // Backend returns user + token on successful signup (update your backend)
+      const { user, token } = data;
+      login(user, token); // Updates global state + persists
+      toast.success("Signup successful! Welcome to Vibe Chat!");
+      // Navigate to profile (user is authenticated)
+      navigate("/profile");
     } catch (err) {
       setError(err.message);
+      toast.error(err.message || "Signup failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="w-screen h-screen bg-[#BDE8F5] flex flex-col text-center justify-center">
       <div className="h-[70%] flex flex-col text-center justify-evenly">
-        {/* Back button */}
-        <button
-          onClick={() => navigate("/")}
-          className="w-20 h-8.75 rounded-full bg-black/30 px-4 py-2 text-sm text-white backdrop-blur ml-2.5
-             transition-all duration-300 cursor-pointer
-             hover:bg-black/50 hover:-translate-y-[2px]
-             hover:shadow-[0_6px_15px_rgba(0,0,0,0.2)] border-none"
-        >
-          ‹ Back
-        </button>
-
         {/* Main Card */}
         <div
           className="
-            h-full w-[calc(100vw-20px)] max-w-200 bg-white rounded-[30px] shadow-xl overflow-hidden
-            mx-auto
-            flex flex-col
-            min-[500px]:flex-row
-             "
+          h-full w-[calc(100vw-20px)] max-w-200 bg-white rounded-[30px] shadow-xl overflow-hidden
+          mx-auto
+          flex flex-col
+          min-[500px]:flex-row
+           "
         >
-          {/* Left Panel (Desktop only) */}
+          {/* Left Panel (Form) */}
           <form
             onSubmit={handleSubmit}
             className="
@@ -94,10 +96,12 @@ export default function Signup() {
             bg-[white]
             "
           >
-            <h2 className="text-center lg:text-left text-xl sm:text-2xl font-semibold text-[#1C4D8D] mb-5 mt-[20px]  ">
+            <h2 className="text-center lg:text-left text-xl sm:text-2xl font-semibold text-[#1C4D8D] mb-5 mt-[20px]">
               Get Started
             </h2>
+
             {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+
             <input
               name="fullName"
               value={formData.fullName}
@@ -125,8 +129,8 @@ export default function Signup() {
               required
             />
 
-            {/* Remember + Forgot */}
-            <div className="w-[80%] mt-[10px] mb-[20px] mx-auto mb-5 flex flex-row flex-row items-center justify-between text-sm">
+            {/* Terms Checkbox */}
+            <div className="w-[80%] mt-[10px] mb-5 mx-auto flex flex-row items-center justify-between text-sm">
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -139,16 +143,16 @@ export default function Signup() {
               </label>
             </div>
 
-            {/* Sign Up */}
+            {/* Sign Up Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-[80%] p-[10px] text-[white] mb-[10px] rounded-full bg-[#3f63c5] py-3 text-sm sm:text-base text-white font-medium hover:opacity-90 transition border-none cursor-pointer disabled:opacity-50"
+              className="w-[80%] p-[10px] text-white mb-[10px] rounded-full bg-[#3f63c5] py-3 text-sm sm:text-base font-medium hover:opacity-90 transition border-none cursor-pointer disabled:opacity-50"
             >
               {loading ? "Signing up..." : "Sign up"}
             </button>
 
-            {/* Divider for social login */}
+            {/* Divider */}
             <div className="flex items-center w-[80%] mx-auto my-2">
               <div className="flex-grow border-t border-gray-300"></div>
               <span className="flex-shrink mx-4 text-gray-500 text-sm">
@@ -157,25 +161,17 @@ export default function Signup() {
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
 
-            {/* Google Sign Up Button */}
+            {/* Google Button */}
             <button
               type="button"
-              className="w-[80%] mx-auto flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-full hover:bg-gray-50 transition"
+              className="w-[80%] mx-auto flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-full hover:bg-gray-50 transition mb-6"
+              onClick={() => {
+                /* Google OAuth handler */
+              }}
             >
               <FaGoogle />
               <span>Sign up with Google</span>
             </button>
-
-            {/* Signup Link */}
-            <p className="mt-[25px] mb-[50px] text-center text-stone-900 text-[18px]">
-              Already have an account?{" "}
-              <span
-                onClick={() => navigate("/login")}
-                className="cursor-pointer text-[#4b6cff] font-medium hover:underline"
-              >
-                Sign in
-              </span>
-            </p>
           </form>
 
           {/* Right Panel */}
@@ -200,9 +196,32 @@ export default function Signup() {
             <p className="text-sm text-white/90 max-w-xs m-[20px]">
               A calm corner of the internet for real, unfiltered conversations.
             </p>
+
+            {/* Login Link */}
+            <p className="mt-[25px] text-center text-[18px] text-white m-[20px]">
+              Already have an account?{" "}
+              <span
+                onClick={() => navigate("/login")}
+                className="cursor-pointer text-[#BDE8F5]  font-medium hover:underline"
+              >
+                Sign in
+              </span>
+            </p>
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }
