@@ -1,8 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../stores/useAuthStore";
 import { FaGoogle } from "react-icons/fa";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function Signup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -17,10 +18,9 @@ export default function Signup() {
   const { login, setLoading, loading, isAuthenticated } = useAuthStore();
 
   // Auto-redirect if already authenticated
-  if (isAuthenticated) {
-    navigate("/");
-    return null;
-  }
+  React.useEffect(() => {
+    if (isAuthenticated) navigate("/profile");
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -54,19 +54,20 @@ export default function Signup() {
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || "Signup failed");
       }
 
       // Backend returns user + token on successful signup (update your backend)
       const { user, token } = data;
-      login(user, token);  // Updates global state + persists
-      toast.success("Signup successful!");
-      // Navigate to dashboard (not login since user is now authenticated)
-      navigate("/dashboard");
+      login(user, token); // Updates global state + persists
+      toast.success("Signup successful! Welcome to Vibe Chat!");
+      // Navigate to profile (user is authenticated)
+      navigate("/profile");
     } catch (err) {
       setError(err.message);
+      toast.error(err.message || "Signup failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -76,7 +77,8 @@ export default function Signup() {
     <div className="w-screen h-screen bg-[#BDE8F5] flex flex-col text-center justify-center">
       <div className="h-[70%] flex flex-col text-center justify-evenly">
         {/* Main Card */}
-        <div className="
+        <div
+          className="
           h-full w-[calc(100vw-20px)] max-w-200 bg-white rounded-[30px] shadow-xl overflow-hidden
           mx-auto
           flex flex-col
@@ -97,9 +99,9 @@ export default function Signup() {
             <h2 className="text-center lg:text-left text-xl sm:text-2xl font-semibold text-[#1C4D8D] mb-5 mt-[20px]">
               Get Started
             </h2>
-            
+
             {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-            
+
             <input
               name="fullName"
               value={formData.fullName}
@@ -128,7 +130,7 @@ export default function Signup() {
             />
 
             {/* Terms Checkbox */}
-            <div className="w-[80%] mt-[10px] mb-[20px] mx-auto mb-5 flex flex-row items-center justify-between text-sm">
+            <div className="w-[80%] mt-[10px] mb-5 mx-auto flex flex-row items-center justify-between text-sm">
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -145,7 +147,7 @@ export default function Signup() {
             <button
               type="submit"
               disabled={loading}
-              className="w-[80%] p-[10px] text-[white] mb-[10px] rounded-full bg-[#3f63c5] py-3 text-sm sm:text-base text-white font-medium hover:opacity-90 transition border-none cursor-pointer disabled:opacity-50"
+              className="w-[80%] p-[10px] text-white mb-[10px] rounded-full bg-[#3f63c5] py-3 text-sm sm:text-base font-medium hover:opacity-90 transition border-none cursor-pointer disabled:opacity-50"
             >
               {loading ? "Signing up..." : "Sign up"}
             </button>
@@ -163,26 +165,18 @@ export default function Signup() {
             <button
               type="button"
               className="w-[80%] mx-auto flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-full hover:bg-gray-50 transition mb-6"
-              onClick={() => {/* Google OAuth handler */}}
+              onClick={() => {
+                /* Google OAuth handler */
+              }}
             >
               <FaGoogle />
               <span>Sign up with Google</span>
             </button>
-
-            {/* Login Link */}
-            <p className="mt-[25px] mb-[50px] text-center text-stone-900 text-[18px]">
-              Already have an account?{" "}
-              <span
-                onClick={() => navigate("/login")}
-                className="cursor-pointer text-[#4b6cff] font-medium hover:underline"
-              >
-                Sign in
-              </span>
-            </p>
           </form>
 
           {/* Right Panel */}
-          <div className="
+          <div
+            className="
             hidden
             min-[500px]:flex
             min-[500px]:w-1/2
@@ -202,9 +196,32 @@ export default function Signup() {
             <p className="text-sm text-white/90 max-w-xs m-[20px]">
               A calm corner of the internet for real, unfiltered conversations.
             </p>
+
+            {/* Login Link */}
+            <p className="mt-[25px] text-center text-[18px] text-white m-[20px]">
+              Already have an account?{" "}
+              <span
+                onClick={() => navigate("/login")}
+                className="cursor-pointer text-[#BDE8F5]  font-medium hover:underline"
+              >
+                Sign in
+              </span>
+            </p>
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }
