@@ -1,10 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaFacebookF, FaTwitter, FaGoogle, FaApple } from "react-icons/fa";
-
+import { FaGoogle } from "react-icons/fa";
+import useAuthStore from "../stores/useAuthStore";
 export default function Login() {
   const navigate = useNavigate();
-
+ const { isAuthenticated } = useAuthStore();
+ if(isAuthenticated){
+  navigate("/");
+  
+  return null;
+ }
   return (
     <motion.div
       className="w-screen h-[100vh] bg-[#BDE8F5] flex flex-col text-center justify-center"
@@ -15,15 +20,7 @@ export default function Login() {
     >
       <div className="h-[70%] flex flex-col text-center justify-evenly">
         {/* Back button */}
-        <button
-          onClick={() => navigate("/")}
-          className="w-[80px] h-[35px] rounded-full bg-black/30 px-4 py-2 text-sm text-white backdrop-blur ml-[10px]
-          transition-all duration-300 cursor-pointer
-          hover:bg-black/50 hover:-translate-y-[2px]
-          hover:shadow-[0_6px_15px_rgba(0,0,0,0.2)] border-none"
-        >
-          ‹ Back
-        </button>
+       
 
         {/* Main Card */}
         <div
@@ -40,7 +37,6 @@ export default function Login() {
             min-[500px]:flex-row
           "
         >
-          
           {/* Left Panel (Desktop only) */}
           <div
             className="
@@ -76,6 +72,7 @@ export default function Login() {
               Welcome back
             </h2>
 
+   
             <input
               placeholder="Email"
               className="w-[75%] mb-4 border border-gray-300 text-sm sm:text-base
@@ -121,15 +118,13 @@ export default function Login() {
 
             {/* Social Login */}
             <div className="w-[75%] my-[20px] flex justify-around mx-auto">
-           
-                   <button
-              type="button"
-              className="w-[100vh] mx-auto flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-full hover:bg-gray-50 transition"
-            >
-              <FaGoogle />
-              <span> Sign up with Google</span>
-            </button>
-          
+              <button
+                type="button"
+                className="w-[80%] mx-auto flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-full hover:bg-gray-50 transition"
+              >
+                <FaGoogle />
+                <span>Sign in with Google</span>
+              </button>
             </div>
 
             {/* Signup Link */}
