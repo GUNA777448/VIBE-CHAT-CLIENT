@@ -96,7 +96,7 @@ export default function Signup() {
             bg-[white]
             "
           >
-            <h2 className="text-center lg:text-left text-xl sm:text-2xl font-semibold text-[#1C4D8D] mb-5 mt-[20px]">
+            <h2 className="text-center lg:text-left text-xl sm:text-2xl font-semibold text-[#1C4D8D] mb-5 mt-[40px]">
               Get Started
             </h2>
 
@@ -169,7 +169,12 @@ export default function Signup() {
                 /* Google OAuth handler */
               }}
             >
-              <FaGoogle />
+              {/* <FaGoogle /> */}
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                alt="Google"
+                className="w-6 h-6"
+              />
               <span>Sign up with Google</span>
             </button>
           </form>

@@ -103,7 +103,8 @@ export default function Login() {
               min-[500px]:flex
               min-[500px]:w-1/2
               h-full  
-              bg-[#1C4D8D]
+            //  bg-[#1C4D8D]
+              bg-[#4b6cff]
               flex-col
               justify-center
               px-10
@@ -140,7 +141,7 @@ export default function Login() {
             "
           >
             {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-            <h2 className="text-center lg:text-left text-xl sm:text-2xl font-semibold text-[#1C4D8D] mb-5 mt-[30px]">
+            <h2 className="text-center lg:text-left text-xl sm:text-2xl font-semibold text-[#1C4D8D] mb-5 mt-[40px]">
               Welcome back
             </h2>
 
@@ -212,7 +213,12 @@ export default function Login() {
                 type="button"
                 className="w-[80%] mx-auto flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-full hover:bg-gray-50 transition"
               >
-                <FaGoogle />
+                {/* <FaGoogle/> */}
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                  alt="Google"
+                  className="w-6 h-6"
+                />
                 <span>Sign in with Google</span>
               </button>
             </div>

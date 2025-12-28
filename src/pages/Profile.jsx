@@ -112,9 +112,9 @@ export default function Profile() {
 /* Reusable Row */
 function MenuItem({ icon, label }) {
   return (
-    <div className="bg-[black]/7 flex items-center justify-between bg-[#f6f8ff] mx-[20px] mt-[20px] px-[10px] pt-3 rounded-[15px] cursor-pointer hover:bg-[#eef1ff] transition">
+    <div className="bg-[black]/7 flex items-center justify-between bg-[#f6f8ff] mx-[20px] mt-[20px] px-[10px]  rounded-[15px] cursor-pointer hover:bg-[#eef1ff] transition">
       <div className="h-[60px]  flex items-center gap-3 text-[#5b7cfa]">
-        <div className="text-lg bg-[black]/7 h-[40px] w-[40px] text-[25px] rounded-[10px]">
+        <div className="flex justify-center text-lg bg-[black]/7 h-[40px] w-[40px] text-[25px] rounded-[10px]">
           <div className=" text-center mt-[5px]">{icon}</div>
         </div>
         <span className="ml-[20px] text-sm text-gray-700 text-[black]/70 text-[20px]">
