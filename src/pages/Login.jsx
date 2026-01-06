@@ -60,9 +60,20 @@ export default function Login() {
       }
 
       const { user, token } = data;
-      login(user, token);
-      toast.success(`Welcome back, ${user.username || user.name}!`);
-      navigate("/profile");
+
+// ✅ STORE TOKEN (THIS WAS MISSING)
+if (formData.rememberMe) {
+  localStorage.setItem("token", token);
+} else {
+  sessionStorage.setItem("token", token);
+}
+
+// ✅ keep Zustand for in-app state
+login(user, token);
+
+toast.success(`Welcome back, ${user.username || user.name}!`);
+navigate("/profile");
+
     } catch (err) {
       setError(err.message);
       toast.error(err.message || "Failed to sign in. Please try again.");
