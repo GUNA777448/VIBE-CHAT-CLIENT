@@ -1,90 +1,75 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaFacebookF, FaTwitter, FaGoogle, FaApple } from "react-icons/fa";
-import { useState } from "react";
+import { FaGoogle } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
 import useAuthStore from "../stores/useAuthStore";
-import { authAPI } from "../utils/api";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login, setLoading, loading } = useAuthStore();
-
-  const [formData, setFormData] = useState({
+  const { isAuthenticated, login, setLoading, loading } = useAuthStore();
+  const [formData, setFormData] = React.useState({
     email: "",
     password: "",
+    rememberMe: false,
   });
+  const [error, setError] = React.useState("");
 
-  const [errors, setErrors] = useState({});
-  const [showPassword, setShowPassword] = useState(false);
+  // Redirect to profile when already authenticated
+  React.useEffect(() => {
+    if (isAuthenticated) navigate("/profile");
+  }, [isAuthenticated, navigate]);
 
-  // API Base URL
-  const API_BASE_URL = "http://localhost:5000";
-
-  // Handle input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
-    }
   };
 
-  // Validate form
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    if (!validateForm()) {
+    if (!formData.email || !formData.password) {
+      const errorMsg = "Please fill in all fields";
+      setError(errorMsg);
+      toast.error(errorMsg);
       return;
     }
 
     setLoading(true);
-
     try {
-      const data = await authAPI.login(formData);
+      const response = await fetch("http://localhost:5000/api/auth/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-      // Store user data and token in auth store
-      login(data.user, data.token);
+      const data = await response.json();
 
-      // Show success message (you can replace with toast notification)
-      alert("Login successful!");
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
 
-      // Navigate to home or dashboard
-      navigate("/");
-    } catch (error) {
-      console.error("Login error:", error);
-      setErrors({ submit: error.message || "Login failed. Please try again." });
+      const { user, token } = data;
+      login(user, token);
+      toast.success(`Welcome back, ${user.username || user.name}!`);
+      navigate("/profile");
+    } catch (err) {
+      setError(err.message);
+      toast.error(err.message || "Failed to sign in. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <motion.div
       className="w-screen h-[100vh] bg-[#BDE8F5] flex flex-col text-center justify-center"
@@ -117,7 +102,7 @@ export default function Login() {
               hidden
               min-[500px]:flex
               min-[500px]:w-1/2
-              h-full
+              h-full  
               bg-[#1C4D8D]
               flex-col
               justify-center
@@ -126,27 +111,28 @@ export default function Login() {
               text-white
             "
           >
-            <div className="max-w-sm text-center">
-              <h1 className="text-3xl xl:text-4xl font-bold leading-tight mb-6">
-                Welcome Back!
+            <div className="flex flex-col items-center">
+              <h1 className="text-white text-3xl xl:text-4xl font-semibold leading-tight mb-4 text-center">
+                Welcome Back !{" "}
               </h1>
-              <p className="text-base text-white/90 mb-12 leading-relaxed">
-                Let's Vibe together
-              </p>
-              <div className="w-full">
-                <p className="text-base mb-3">Don't have an account?</p>
-                <button
+              <p className="text-white">Let's Vibe together </p>
+
+              {/* Signup Link */}
+              <p className="mt-[25px] text-center text-[18px] text-white">
+                Don't have an account?{" "}
+                <span
                   onClick={() => navigate("/signup")}
-                  className="px-8 py-3 bg-white text-[#1C4D8D] font-semibold rounded-full hover:bg-white/90 transition-all shadow-lg mt-4 w-[80%]"
+                  className="cursor-pointer text-[#BDE8F5] font-medium hover:underline"
                 >
                   Sign up
-                </button>
-              </div>
+                </span>
+              </p>
             </div>
           </div>
 
           {/* Right Panel */}
-          <div
+          <form
+            onSubmit={handleSubmit}
             className="
               w-full
               min-[500px]:w-1/2
@@ -154,53 +140,44 @@ export default function Login() {
               bg-[white]
             "
           >
-            <div className="flex justify-center items-center p-2 rounded-2xl mt-12 ">
-              <h1 className="border-2 border-black text-center font-bold text-white bg-[#4988C4] p-2 text-2xl ">
-                VIBE{" "}
-              </h1>
-              <h1 className="text-black font-bold text-2xl m-2 border-2 p-2">
-                CHAT
-              </h1>
-            </div>
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col items-center"
-            >
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className={`w-[75%] mb-2 border text-sm sm:text-base
-                focus:outline-none p-[12px] m-[10px] rounded-[10px]
-                ${
-                  errors.email
-                    ? "border-red-500 focus:border-red-500"
-                    : "border-gray-300 focus:border-[#4988C4]"
-                }`}
-              />
-              {errors.email && (
-                <span className="text-red-500 text-xs w-[75%] mb-2">
-                  {errors.email}
-                </span>
-              )}
+            {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+            <h2 className="text-center lg:text-left text-xl sm:text-2xl font-semibold text-[#1C4D8D] mb-5 mt-[30px]">
+              Welcome back
+            </h2>
 
-              <div className="relative w-[75%]">
+            <input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Email"
+              className="w-[75%] mb-4 border border-gray-300 text-sm sm:text-base
+              focus:outline-none focus:border-[#4988C4]
+              p-[12px] m-[10px] rounded-[10px]"
+              required
+            />
+            <input
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Password"
+              className="w-[75%] mb-4 rounded-[10px]
+              border border-gray-300 text-sm sm:text-base
+              focus:outline-none focus:border-[#4988C4]
+              p-[12px]"
+              required
+            />
+
+            {/* Remember + Forgot */}
+            <div className="w-[80%] mt-[10px] mb-[20px] mx-auto flex items-center justify-between text-sm ">
+              <label className="flex items-center gap-2">
                 <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className={`w-full mb-2 rounded-[10px]
-                  border text-sm sm:text-base
-                  focus:outline-none p-[12px]
-                  ${
-                    errors.password
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 focus:border-[#4988C4]"
-                  }`}
+                  name="rememberMe"
+                  type="checkbox"
+                  checked={formData.rememberMe}
+                  onChange={handleChange}
+                  className="accent-[#4988C4] cursor-pointer"
                 />
                 <button
                   type="button"
@@ -264,38 +241,48 @@ export default function Login() {
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
 
+            {/* Sign In */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-[80%] p-[10px] text-[white] mb-[20px] rounded-full
+              bg-[#3f63c5] py-3 text-sm sm:text-base cursor-pointer
+              font-medium hover:opacity-90 transition border-none disabled:opacity-50"
+            >
+              {loading ? "Signing in..." : "Sign in"}
+            </button>
+            <div className="flex items-center w-[80%] mx-auto my-1">
+              <div className="flex-grow border-t border-gray-300"></div>
+              <span className="flex-shrink mx-4 text-gray-500 text-sm">
+                or continue with
+              </span>
+              <div className="flex-grow border-t border-gray-300"></div>
+            </div>
             {/* Social Login */}
-            <div className="w-[75%] my-[15px] flex justify-around mx-auto">
+            <div className="w-[75%] my-[20px] flex justify-around mx-auto">
               <button
                 type="button"
-                onClick={() => {
-                  // TODO: Implement Google OAuth
-                  alert("Google Sign-in not implemented yet");
-                }}
-                className="w-[100vh] mx-auto flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-full hover:bg-gray-50 transition"
+                className="w-[80%] mx-auto flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-full hover:bg-gray-50 transition"
               >
                 <FaGoogle />
                 <span>Sign in with Google</span>
               </button>
             </div>
-
-            {/* Signup Link - Removed since it's now in the left panel */}
-
-            {/* Mobile-only Signup Link */}
-            <div className="min-[500px]:hidden mt-4 text-center">
-              <p className="text-sm text-gray-600">
-                Don't have an account?{" "}
-                <span
-                  onClick={() => navigate("/signup")}
-                  className="text-[#4988C4] font-semibold cursor-pointer hover:underline"
-                >
-                  Sign up
-                </span>
-              </p>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </motion.div>
   );
 }
