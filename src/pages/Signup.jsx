@@ -3,10 +3,6 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../stores/useAuthStore";
 import { FaGoogle } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
-import useAuthStore from "../stores/useAuthStore";
-import "react-toastify/dist/ReactToastify.css";
-
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 export default function Signup() {
   const navigate = useNavigate();
@@ -18,9 +14,6 @@ export default function Signup() {
     agreeToTerms: false,
   });
   const [error, setError] = useState("");
-
-  // Use Zustand store instead of local state
-  const { login, setLoading, loading, isAuthenticated } = useAuthStore();
 
   // Auto-redirect if already authenticated
   React.useEffect(() => {

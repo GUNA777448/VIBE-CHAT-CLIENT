@@ -170,7 +170,7 @@ export default function Login() {
             />
 
             {/* Remember + Forgot */}
-            <div className="w-[80%] mt-[10px] mb-[20px] mx-auto flex items-center justify-between text-sm ">
+            <div className="w-[80%] mt-[10px] mb-[20px] mx-auto flex items-center justify-between text-sm">
               <label className="flex items-center gap-2">
                 <input
                   name="rememberMe"
@@ -179,60 +179,33 @@ export default function Login() {
                   onChange={handleChange}
                   className="accent-[#4988C4] cursor-pointer"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
-                >
-                  {showPassword ? "🙈" : "👁️"}
-                </button>
-              </div>
-              {errors.password && (
-                <span className="text-red-500 text-xs w-[75%] mb-2">
-                  {errors.password}
-                </span>
-              )}
+                <span>Remember me</span>
+              </label>
 
-              {/* Remember + Forgot */}
-              <div className="w-[80%] mt-[10px] mb-[20px] mx-auto flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="accent-[#4988C4] cursor-pointer"
-                  />
-                  <span>Remember me</span>
-                </label>
+              <span
+                onClick={() => navigate("/forgot")}
+                className="text-[#4988C4] cursor-pointer hover:underline"
+              >
+                Forgot password?
+              </span>
+            </div>
 
-                <span
-                  onClick={() => navigate("/forgot")}
-                  className="text-[#4988C4] cursor-pointer hover:underline"
-                >
-                  Forgot password?
-                </span>
-              </div>
-
-              {/* Error message */}
-              {errors.submit && (
-                <div className="w-[80%] mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-sm">
-                  {errors.submit}
-                </div>
-              )}
-
-              {/* Sign In Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-[80%] p-[10px] text-white mb-[20px] rounded-full
+            {/* Sign In Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-[80%] p-[10px] text-white mb-[20px] rounded-full
                 py-3 text-sm sm:text-base cursor-pointer font-medium transition border-none
                 ${
                   loading
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-[#3f63c5] hover:opacity-90"
                 }`}
-              >
-                {loading ? "Signing in..." : "Sign in"}
-              </button>
-            </form>
+            >
+              {loading ? "Signing in..." : "Sign in"}
+            </button>
+
+            {/* Divider */}
             <div className="flex items-center w-[80%] mx-auto my-1">
               <div className="flex-grow border-t border-gray-300"></div>
               <span className="flex-shrink mx-4 text-gray-500 text-sm">
@@ -241,23 +214,6 @@ export default function Login() {
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
 
-            {/* Sign In */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-[80%] p-[10px] text-[white] mb-[20px] rounded-full
-              bg-[#3f63c5] py-3 text-sm sm:text-base cursor-pointer
-              font-medium hover:opacity-90 transition border-none disabled:opacity-50"
-            >
-              {loading ? "Signing in..." : "Sign in"}
-            </button>
-            <div className="flex items-center w-[80%] mx-auto my-1">
-              <div className="flex-grow border-t border-gray-300"></div>
-              <span className="flex-shrink mx-4 text-gray-500 text-sm">
-                or continue with
-              </span>
-              <div className="flex-grow border-t border-gray-300"></div>
-            </div>
             {/* Social Login */}
             <div className="w-[75%] my-[20px] flex justify-around mx-auto">
               <button
