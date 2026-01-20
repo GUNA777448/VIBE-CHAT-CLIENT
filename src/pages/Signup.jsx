@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useAuthStore from "../stores/useAuthStore";
-import { FaGoogle } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
+import useAuthStore from "../stores/useAuthStore";
 import "react-toastify/dist/ReactToastify.css";
+
+import AuthLayout from "../components/Auth/AuthLayout";
+import AuthInput from "../components/Auth/AuthInput";
+import AuthButton from "../components/Auth/AuthButton";
+import SocialLogin from "../components/Auth/SocialLogin";
+
 export default function Signup() {
   const navigate = useNavigate();
   const { login, loading, setLoading, isAuthenticated } = useAuthStore();
@@ -11,11 +16,11 @@ export default function Signup() {
     fullName: "",
     email: "",
     password: "",
+    confirmPassword: "", // Added confirm password field usually expected in signups
     agreeToTerms: false,
   });
   const [error, setError] = useState("");
 
-  // Auto-redirect if already authenticated
   React.useEffect(() => {
     if (isAuthenticated) navigate("/profile");
   }, [isAuthenticated, navigate]);
@@ -32,7 +37,6 @@ export default function Signup() {
     e.preventDefault();
     setError("");
 
-    // Basic validation
     if (!formData.fullName || !formData.email || !formData.password) {
       const errorMsg = "Please fill in all fields";
       setError(errorMsg);
@@ -58,9 +62,7 @@ export default function Signup() {
     try {
       const response = await fetch("http://localhost:5000/api/auth/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: formData.fullName,
           email: formData.email,
@@ -74,11 +76,9 @@ export default function Signup() {
         throw new Error(data.message || "Signup failed");
       }
 
-      // Backend returns user + token on successful signup (update your backend)
       const { user, token } = data;
-      login(user, token); // Updates global state + persists
+      login(user, token);
       toast.success("Signup successful! Welcome to Vibe Chat!");
-      // Navigate to profile (user is authenticated)
       navigate("/profile");
     } catch (err) {
       setError(err.message);
@@ -89,141 +89,83 @@ export default function Signup() {
   };
 
   return (
-    <div className="w-screen h-screen bg-[#BDE8F5] flex flex-col text-center justify-center">
-      <div className="h-[70%] flex flex-col text-center justify-evenly">
-        {/* Main Card */}
-        <div
-          className="
-          h-full w-[calc(100vw-20px)] max-w-200 bg-white rounded-[30px] shadow-xl overflow-hidden
-          mx-auto
-          flex flex-col
-          min-[500px]:flex-row
-           "
-        >
-          {/* Left Panel (Form) */}
-          <form
-            onSubmit={handleSubmit}
-            className="
-            w-full
-            h-full
-            min-[500px]:w-1/2
-            px-6 
-            bg-[white]
-            "
-          >
-            <h2 className="text-center lg:text-left text-xl sm:text-2xl font-semibold text-[#1C4D8D] mb-5 mt-[20px]">
-              Get Started
-            </h2>
+    <AuthLayout
+      title="Hello, welcome!"
+      subtitle="A calm corner of the internet for real, unfiltered conversations."
+      linkText="Already have an account?"
+      linkTo="/login"
+      linkActionText="Sign in"
+    >
+      <div className="w-full max-w-md mx-auto">
+        <h2 className="text-2xl font-bold text-[#1C4D8D] mb-6 text-center md:text-left">
+          Create Account
+        </h2>
 
-            {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-
-            <input
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              placeholder="Enter Full Name"
-              className="w-[75%] mb-2 border border-gray-300 text-sm sm:text-base focus:outline-none focus:border-[#4988C4] p-[12px] mt-[10px] rounded-[10px]"
-              required
-            />
-            <input
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter Email"
-              className="w-[75%] mb-2 border border-gray-300 text-sm sm:text-base focus:outline-none focus:border-[#4b6cff] p-[12px] m-[10px] rounded-[10px]"
-              required
-            />
-            <input
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter Password"
-              className="w-[75%] mb-2 rounded-[10px] border border-gray-300 text-sm sm:text-base focus:outline-none focus:border-[#4b6cff] p-[12px]"
-              required
-            />
-
-            {/* Terms Checkbox */}
-            <div className="w-[80%] mt-[10px] mb-5 mx-auto flex flex-row items-center justify-between text-sm">
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="agreeToTerms"
-                  checked={formData.agreeToTerms}
-                  onChange={handleChange}
-                  className="accent-[#4b6cff] cursor-pointer"
-                />
-                <span>I agree to the processing of Personal data</span>
-              </label>
-            </div>
-
-            {/* Sign Up Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-[80%] p-[10px] text-white mb-[10px] rounded-full bg-[#3f63c5] py-3 text-sm sm:text-base font-medium hover:opacity-90 transition border-none cursor-pointer disabled:opacity-50"
-            >
-              {loading ? "Signing up..." : "Sign up"}
-            </button>
-
-            {/* Divider */}
-            <div className="flex items-center w-[80%] mx-auto my-2">
-              <div className="flex-grow border-t border-gray-300"></div>
-              <span className="flex-shrink mx-4 text-gray-500 text-sm">
-                or continue with
-              </span>
-              <div className="flex-grow border-t border-gray-300"></div>
-            </div>
-
-            {/* Google Button */}
-            <button
-              type="button"
-              className="w-[80%] mx-auto flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-full hover:bg-gray-50 transition mb-6"
-              onClick={() => {
-                /* Google OAuth handler */
-              }}
-            >
-              <FaGoogle />
-              <span>Sign up with Google</span>
-            </button>
-          </form>
-
-          {/* Right Panel */}
-          <div
-            className="
-            hidden
-            min-[500px]:flex
-            min-[500px]:w-1/2
-            h-full
-            bg-[#4b6cff]
-            flex-col
-            justify-center
-            items-center
-            px-10
-            text-white
-            "
-          >
-            <h1 className="text-3xl xl:text-4xl font-semibold leading-tight mb-4 text-left ml-[20px]">
-              Hello,
-              <br />
-              welcome!
-            </h1>
-            <p className="text-sm text-white/90 max-w-xs m-[20px]">
-              A calm corner of the internet for real, unfiltered conversations.
-            </p>
-
-            {/* Login Link */}
-            <p className="mt-[25px] text-center text-[18px] text-white m-[20px]">
-              Already have an account?{" "}
-              <span
-                onClick={() => navigate("/login")}
-                className="cursor-pointer text-[#BDE8F5]  font-medium hover:underline"
-              >
-                Sign in
-              </span>
-            </p>
+        {error && (
+          <div className="bg-red-50 text-red-500 text-sm p-3 rounded-lg mb-4 text-center">
+            {error}
           </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <AuthInput
+            name="fullName"
+            placeholder="Full Name"
+            value={formData.fullName}
+            onChange={handleChange}
+            required
+          />
+          <AuthInput
+            name="email"
+            type="email"
+            placeholder="Email Address"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <AuthInput
+            name="password"
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+
+          <div className="flex items-center gap-2 text-sm text-gray-600 my-4">
+             <input
+               type="checkbox"
+               name="agreeToTerms"
+               checked={formData.agreeToTerms}
+               onChange={handleChange}
+               className="accent-[#4b6cff] w-4 h-4 rounded border-gray-300 focus:ring-[#4b6cff] shrink-0"
+               id="terms"
+             />
+             <label htmlFor="terms" className="cursor-pointer select-none">
+               I agree to the <span className="text-[#4b6cff] hover:underline">Terms of Service</span> and <span className="text-[#4b6cff] hover:underline">Privacy Policy</span>
+             </label>
+          </div>
+
+          <AuthButton type="submit" loading={loading}>
+            Sign Up
+          </AuthButton>
+        </form>
+
+        <SocialLogin
+          onGoogleClick={() => toast.info("Google signup not implemented yet")}
+          onFacebookClick={() => toast.info("Facebook signup not implemented yet")}
+        />
+
+        <div className="mt-8 text-center md:hidden">
+          <p className="text-gray-600">
+            Already have an account?{" "}
+            <span
+              onClick={() => navigate("/login")}
+              className="text-[#4b6cff] font-bold cursor-pointer hover:underline"
+            >
+              Sign in
+            </span>
+          </p>
         </div>
       </div>
       <ToastContainer
@@ -238,6 +180,6 @@ export default function Signup() {
         pauseOnHover
         theme="light"
       />
-    </div>
+    </AuthLayout>
   );
 }
