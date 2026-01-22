@@ -1,5 +1,5 @@
 // API configuration and utilities
-const API_BASE_URL =  "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 // API utility class
 class ApiClient {
@@ -35,7 +35,7 @@ class ApiClient {
 
       if (!response.ok) {
         throw new Error(
-          data.message || `HTTP error! status: ${response.status}`
+          data.message || `HTTP error! status: ${response.status}`,
         );
       }
 
