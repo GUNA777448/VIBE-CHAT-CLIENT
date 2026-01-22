@@ -1,6 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import CursorSparkle from "./components/CursorSparkle";
+
 
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -25,11 +25,7 @@ export default function App() {
         <Routes location={location} key={location.pathname}>
           <Route
             path="/"
-            element={
-              <CursorSparkle>
-                <Home />
-              </CursorSparkle>
-            }
+            element={<Home />}
           />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
