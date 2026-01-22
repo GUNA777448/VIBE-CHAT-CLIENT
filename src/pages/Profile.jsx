@@ -1,3 +1,5 @@
+
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../stores/useAuthStore";
 import ProfileHeader from "../components/Profile/ProfileHeader";
@@ -8,18 +10,24 @@ export default function Profile() {
   const navigate = useNavigate();
   const { user, logout: logoutFromStore } = useAuthStore();
 
+  // 🔥 Local editable user state
+  const [localUser, setLocalUser] = useState(user);
+
   const handleLogout = () => {
     logoutFromStore();
     navigate("/login");
   };
 
+  // 🔥 This updates both Header + Menu
+  const handleUpdateUser = (updatedFields) => {
+    setLocalUser((prev) => ({
+      ...prev,
+      ...updatedFields,
+    }));
+  };
+
   return (
     <div className="min-h-screen w-screen flex items-center justify-center bg-[#E0E7FF] p-0 md:p-6 overflow-hidden">
-      {/* Background Decor */}
-      <div className="fixed top-[-20%] right-[-10%] w-[600px] h-[600px] bg-[#5b7cfa]/20 rounded-full blur-[120px] pointer-events-none"></div>
-      <div className="fixed bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[100px] pointer-events-none"></div>
-
-      {/* CARD */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -31,17 +39,35 @@ export default function Profile() {
           relative z-10
         "
       >
-        <ProfileHeader 
-            user={user} 
-            onBack={() => navigate("/")} 
+        <ProfileHeader user={localUser} onBack={() => navigate("/")} />
+
+        {/* 🔥 Pass update function */}
+        <ProfileMenu
+          user={localUser}
+          onLogout={handleLogout}
+          onUpdateUser={handleUpdateUser}
         />
-        
-        <ProfileMenu 
-            user={user} 
-            onLogout={handleLogout} 
-        />
-        
       </motion.div>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
