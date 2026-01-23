@@ -41,23 +41,30 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-[#f8f9fa] overflow-auto">
-      <div className="relative z-10 max-w-6xl mx-auto p-4 md:p-6">
-        {/* Header */}
+    <div className="min-h-screen w-screen bg-gradient-to-br from-[#E0E7FF] via-[#F0F4FF] to-[#E8ECFF] overflow-auto">
+      {/* Background Decorations */}
+      <div className="fixed top-[-10%] right-[-5%] w-[600px] h-[600px] bg-[#5b7cfa]/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="fixed bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+      <div className="relative z-10 max-w-7xl mx-auto p-4 md:p-8">
+        {/* Header with Back Button */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="mb-6 flex items-center gap-4"
+          className="mb-6 flex items-center justify-between"
         >
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate("/")}
-            className="bg-white p-2.5 rounded-xl shadow-sm hover:shadow transition-all cursor-pointer border border-gray-200"
+            className="bg-white/90 backdrop-blur-sm p-3 rounded-2xl shadow-lg hover:shadow-xl transition-all cursor-pointer border-none flex items-center gap-2 text-gray-700 font-semibold"
           >
-            <FiChevronLeft className="text-lg text-gray-700" />
+            <FiChevronLeft className="text-xl" />
+            <span className="hidden sm:inline">Back</span>
           </motion.button>
-          <h1 className="text-xl font-semibold text-gray-900">Profile</h1>
+
+          <h1 className="text-2xl font-bold text-gray-800">My Profile</h1>
+          <div className="w-20"></div>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -68,63 +75,69 @@ export default function Profile() {
             className="lg:col-span-4 space-y-6"
           >
             {/* Main Profile Card */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+            <div className="bg-white/90 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/50">
               {/* Cover Image */}
-              <div className="relative -mx-6 -mt-6 mb-6 h-28 bg-gradient-to-r from-[#5b7cfa] to-[#7c8cfa] rounded-t-2xl">
+              <div className="relative -mx-8 -mt-8 mb-6 h-32 bg-gradient-to-r from-[#5b7cfa] to-[#4b6cff] rounded-t-3xl overflow-hidden">
+                <div className="absolute inset-0 bg-black/10"></div>
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  className="absolute top-2 right-2 bg-white/90 text-gray-700 p-1.5 rounded-lg cursor-pointer border-none hover:bg-white transition-all"
+                  whileHover={{ scale: 1.1 }}
+                  className="absolute top-3 right-3 bg-white/20 backdrop-blur-sm text-white p-2 rounded-xl cursor-pointer border-none hover:bg-white/30 transition-all"
                 >
                   <FiCamera className="text-sm" />
                 </motion.button>
               </div>
 
               {/* Avatar */}
-              <div className="relative -mt-16 mb-4">
-                <div className="relative w-28 h-28 mx-auto">
+              <div className="relative -mt-20 mb-6">
+                <div className="relative w-32 h-32 mx-auto">
                   <img
                     src="https://i.pinimg.com/1200x/6e/59/95/6e599501252c23bcf02658617b29c894.jpg"
                     alt="Profile"
-                    className="w-full h-full object-cover rounded-2xl border-4 border-white shadow-md"
+                    className="w-full h-full object-cover rounded-3xl border-4 border-white shadow-xl"
                   />
-                  <div className="absolute -bottom-1 -right-1 bg-emerald-500 w-7 h-7 rounded-lg border-3 border-white"></div>
+                  <div className="absolute -bottom-1 -right-1 bg-green-500 w-8 h-8 rounded-xl border-4 border-white flex items-center justify-center">
+                    <FiCheck className="text-white text-xs" />
+                  </div>
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    className="absolute bottom-0 left-0 bg-[#5b7cfa] text-white p-1.5 rounded-lg shadow cursor-pointer border-none"
+                    whileHover={{ scale: 1.1 }}
+                    className="absolute bottom-0 left-0 bg-[#5b7cfa] text-white p-2 rounded-xl shadow-lg cursor-pointer border-none"
                   >
-                    <FiCamera className="text-xs" />
+                    <FiCamera className="text-sm" />
                   </motion.button>
                 </div>
               </div>
 
               {/* Name & Bio */}
-              <div className="text-center mb-5">
-                <h2 className="text-xl font-semibold text-gray-900 mb-0.5">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-1">
                   {user?.username || user?.name || "Alex Morrison"}
                 </h2>
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 text-sm mb-3">
                   {user?.email || "alex@example.com"}
+                </p>
+                <p className="text-gray-600 text-sm px-4">
+                  Living my best life 🌟 | Tech enthusiast | Coffee lover ☕
                 </p>
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-3 mb-5 pb-5 border-b border-gray-100">
+              <div className="grid grid-cols-3 gap-4 mb-6 pb-6 border-b border-gray-200">
                 <div className="text-center">
-                  <div className="text-xl font-semibold text-gray-900">127</div>
+                  <div className="text-2xl font-bold text-[#5b7cfa]">127</div>
                   <div className="text-xs text-gray-500">Chats</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xl font-semibold text-gray-900">892</div>
+                  <div className="text-2xl font-bold text-[#5b7cfa]">892</div>
                   <div className="text-xs text-gray-500">Messages</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xl font-semibold text-gray-900">48</div>
+                  <div className="text-2xl font-bold text-[#5b7cfa]">48</div>
                   <div className="text-xs text-gray-500">Groups</div>
                 </div>
               </div>
 
               {/* Contact Info */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <InfoRow
                   icon={<FiPhone />}
                   label="Phone"
@@ -142,6 +155,20 @@ export default function Profile() {
                 />
                 <InfoRow icon={<MdWc />} label="Gender" value="Male" />
               </div>
+
+              {/* Social Links */}
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <p className="text-sm text-gray-600 font-semibold mb-3">
+                  Connect with me
+                </p>
+                <div className="flex justify-center gap-3">
+                  <SocialIcon icon={<FaFacebookF />} />
+                  <SocialIcon icon={<FaTwitter />} />
+                  <SocialIcon icon={<FaLinkedinIn />} />
+                  <SocialIcon icon={<FaInstagram />} />
+                  <SocialIcon icon={<FaGithub />} />
+                </div>
+              </div>
             </div>
           </motion.div>
 
@@ -152,8 +179,8 @@ export default function Profile() {
             className="lg:col-span-8 space-y-6"
           >
             {/* Tabs */}
-            <div className="bg-white rounded-2xl p-1.5 shadow-sm border border-gray-200">
-              <div className="flex gap-1 overflow-x-auto">
+            <div className="bg-white/90 backdrop-blur-xl rounded-3xl p-2 shadow-xl border border-white/50">
+              <div className="flex gap-2 overflow-x-auto">
                 <Tab
                   active={activeTab === "profile"}
                   onClick={() => setActiveTab("profile")}
@@ -186,19 +213,19 @@ export default function Profile() {
             </div>
 
             {/* Content */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+            <div className="bg-white/90 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/50">
               {activeTab === "profile" && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="space-y-5"
+                  className="space-y-6"
                 >
                   <SectionHeader
                     title="Personal Information"
-                    subtitle="Manage your personal details"
+                    subtitle="Update your personal details"
                   />
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <InputField
                       label="Username"
                       value={user?.username || "alexmorrison"}
@@ -211,18 +238,25 @@ export default function Profile() {
                     <InputField label="Location" value="San Francisco, CA" />
                   </div>
 
-                  <div className="flex justify-end gap-3 pt-3">
+                  <div className="grid grid-cols-1 gap-6">
+                    <TextAreaField
+                      label="Bio"
+                      value="Living my best life 🌟 | Tech enthusiast | Coffee lover ☕"
+                    />
+                  </div>
+
+                  <div className="flex justify-end gap-3 pt-4">
                     <motion.button
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
-                      className="px-5 py-2.5 rounded-xl bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition-all cursor-pointer border-none text-sm"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="px-6 py-3 rounded-xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-all cursor-pointer border-none"
                     >
                       Cancel
                     </motion.button>
                     <motion.button
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
-                      className="px-5 py-2.5 rounded-xl bg-[#5b7cfa] text-white font-medium hover:bg-[#4b6cfa] transition-all cursor-pointer border-none text-sm"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#5b7cfa] to-[#4b6cff] text-white font-semibold hover:shadow-lg transition-all cursor-pointer border-none"
                     >
                       Save Changes
                     </motion.button>
@@ -234,11 +268,11 @@ export default function Profile() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="space-y-5"
+                  className="space-y-6"
                 >
                   <SectionHeader
                     title="Account Settings"
-                    subtitle="Manage your account and security"
+                    subtitle="Manage your account preferences"
                   />
 
                   <div className="space-y-4">
@@ -265,12 +299,12 @@ export default function Profile() {
                     />
                   </div>
 
-                  <div className="pt-4 border-t border-gray-100">
+                  <div className="pt-6 border-t border-gray-200">
                     <motion.button
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={handleLogout}
-                      className="w-full px-5 py-3 rounded-xl bg-red-50 text-red-600 font-medium hover:bg-red-100 transition-all cursor-pointer border-none flex items-center justify-center gap-2 text-sm"
+                      className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold hover:shadow-lg transition-all cursor-pointer border-none flex items-center justify-center gap-2"
                     >
                       <FiLogOut />
                       Sign Out
@@ -283,11 +317,11 @@ export default function Profile() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="space-y-5"
+                  className="space-y-6"
                 >
                   <SectionHeader
                     title="Privacy & Security"
-                    subtitle="Control your privacy preferences"
+                    subtitle="Control your privacy settings"
                   />
 
                   <div className="space-y-4">
@@ -325,11 +359,11 @@ export default function Profile() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="space-y-5"
+                  className="space-y-6"
                 >
                   <SectionHeader
-                    title="Notifications"
-                    subtitle="Manage notification preferences"
+                    title="Notification Preferences"
+                    subtitle="Manage how you receive notifications"
                   />
 
                   <div className="space-y-4">
@@ -375,10 +409,10 @@ function Tab({ active, onClick, children }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center px-4 py-2.5 rounded-xl font-medium text-sm transition-all cursor-pointer border-none whitespace-nowrap ${
+      className={`flex items-center px-4 py-3 rounded-2xl font-semibold text-sm transition-all cursor-pointer border-none whitespace-nowrap ${
         active
-          ? "bg-[#5b7cfa] text-white"
-          : "bg-transparent text-gray-600 hover:bg-gray-50"
+          ? "bg-gradient-to-r from-[#5b7cfa] to-[#4b6cff] text-white shadow-lg"
+          : "bg-transparent text-gray-600 hover:bg-gray-100"
       }`}
     >
       {children}
@@ -388,23 +422,35 @@ function Tab({ active, onClick, children }) {
 
 function InfoRow({ icon, label, value }) {
   return (
-    <div className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 transition-colors">
-      <div className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center text-[#5b7cfa]">
+    <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+      <div className="w-10 h-10 rounded-xl bg-[#5b7cfa]/10 flex items-center justify-center text-[#5b7cfa]">
         {icon}
       </div>
       <div className="flex-1">
         <div className="text-xs text-gray-500">{label}</div>
-        <div className="text-sm text-gray-800 font-medium">{value}</div>
+        <div className="text-sm text-gray-700 font-medium">{value}</div>
       </div>
     </div>
   );
 }
 
+function SocialIcon({ icon }) {
+  return (
+    <motion.button
+      whileHover={{ scale: 1.1, y: -2 }}
+      whileTap={{ scale: 0.9 }}
+      className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#5b7cfa] hover:text-white transition-all cursor-pointer border-none"
+    >
+      {icon}
+    </motion.button>
+  );
+}
+
 function SectionHeader({ title, subtitle }) {
   return (
-    <div className="mb-4">
-      <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-      <p className="text-sm text-gray-500 mt-0.5">{subtitle}</p>
+    <div className="mb-6">
+      <h3 className="text-xl font-bold text-gray-800">{title}</h3>
+      <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
     </div>
   );
 }
@@ -412,13 +458,28 @@ function SectionHeader({ title, subtitle }) {
 function InputField({ label, value }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1.5">
+      <label className="block text-sm font-semibold text-gray-700 mb-2">
         {label}
       </label>
       <input
         type="text"
         defaultValue={value}
-        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-[#5b7cfa] focus:outline-none focus:ring-1 focus:ring-[#5b7cfa] transition-all"
+        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#5b7cfa] focus:outline-none focus:ring-2 focus:ring-[#5b7cfa]/20 transition-all"
+      />
+    </div>
+  );
+}
+
+function TextAreaField({ label, value }) {
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-gray-700 mb-2">
+        {label}
+      </label>
+      <textarea
+        rows={3}
+        defaultValue={value}
+        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#5b7cfa] focus:outline-none focus:ring-2 focus:ring-[#5b7cfa]/20 transition-all resize-none"
       />
     </div>
   );
@@ -428,32 +489,32 @@ function SettingItem({ icon, title, description, toggle, toggleValue }) {
   const [isOn, setIsOn] = useState(toggleValue || false);
 
   return (
-    <div className="flex items-center justify-between p-3.5 rounded-lg hover:bg-gray-50 transition-all group">
-      <div className="flex items-start gap-3 flex-1">
-        <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-[#5b7cfa] group-hover:bg-[#5b7cfa]/10 transition-all flex-shrink-0">
+    <div className="flex items-center justify-between p-4 rounded-xl hover:bg-gray-50 transition-all group">
+      <div className="flex items-start gap-4 flex-1">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#5b7cfa]/10 to-[#4b6cff]/10 flex items-center justify-center text-[#5b7cfa] group-hover:from-[#5b7cfa]/20 group-hover:to-[#4b6cff]/20 transition-all">
           {icon}
         </div>
         <div className="flex-1">
-          <div className="text-sm font-medium text-gray-900">{title}</div>
-          <div className="text-xs text-gray-500 mt-0.5">{description}</div>
+          <div className="text-sm font-semibold text-gray-800">{title}</div>
+          <div className="text-xs text-gray-500 mt-1">{description}</div>
         </div>
       </div>
 
       {toggle ? (
         <button
           onClick={() => setIsOn(!isOn)}
-          className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none border-none cursor-pointer flex-shrink-0 ${
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none border-none cursor-pointer ${
             isOn ? "bg-[#5b7cfa]" : "bg-gray-300"
           }`}
         >
           <span
-            className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
-              isOn ? "translate-x-5" : "translate-x-0.5"
+            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+              isOn ? "translate-x-6" : "translate-x-1"
             }`}
           />
         </button>
       ) : (
-        <FiEdit2 className="text-gray-400 group-hover:text-[#5b7cfa] transition-colors flex-shrink-0" />
+        <FiEdit2 className="text-gray-400 group-hover:text-[#5b7cfa] transition-colors" />
       )}
     </div>
   );
