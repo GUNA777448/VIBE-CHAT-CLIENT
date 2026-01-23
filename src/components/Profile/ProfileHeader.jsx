@@ -1,10 +1,32 @@
-import React from "react";
-import { FiChevronLeft, FiCamera, FiCheck } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import React, { useRef, useState } from "react";
+import { FiChevronLeft } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileHeader({ user, onBack }) {
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+
+  const [previewImage, setPreviewImage] = useState(
+    user?.avatar ||
+      "https://i.pinimg.com/1200x/6e/59/95/6e599501252c23bcf02658617b29c894.jpg"
+  );
+
+  // Open file picker when clicking Edit Profile
+  const handleEditProfile = () => {
+    fileInputRef.current.click();
+  };
+
+  // When user selects a new image
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setPreviewImage(previewUrl);
+
+      // Later we will upload this file to backend here
+      console.log("Selected new avatar:", file);
+    }
+  };
 
   return (
     <div
@@ -22,16 +44,9 @@ export default function ProfileHeader({ user, onBack }) {
         shadow-2xl z-10
       "
     >
-      {/* Animated Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-300 rounded-full blur-3xl"></div>
-      </div>
-
-      <div className="relative z-10 flex items-center justify-between mb-8">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+      {/* Header buttons */}
+      <div className="flex items-center justify-between mb-8">
+        <button
           onClick={onBack}
           className="text-white flex items-center gap-2 text-lg font-medium bg-transparent border-none cursor-pointer hover:opacity-90 transition"
         >
@@ -41,40 +56,43 @@ export default function ProfileHeader({ user, onBack }) {
           <span className="hidden sm:inline">Back</span>
         </motion.button>
 
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="text-white bg-white/20 backdrop-blur-md px-5 py-2.5 rounded-full text-sm font-semibold flex items-center gap-2 cursor-pointer border border-white/20 hover:bg-white/30 transition-all shadow-lg"
+        <button
+          onClick={handleEditProfile}
+          className="text-white bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 cursor-pointer border border-white/10 hover:bg-white/30 transition shadow-sm"
         >
           Edit Profile
-        </motion.button>
+        </button>
+
+        {/* Hidden file input */}
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          hidden
+          onChange={handleImageChange}
+        />
       </div>
 
       {/* Avatar Section */}
-      <div className="relative z-10 flex flex-col items-center justify-center flex-grow">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, type: "spring" }}
-          className="relative group"
-        >
+      <div className="flex flex-col items-center justify-center flex-grow">
+        <div className="relative group">
           {/* Glow effect */}
-          <div className="absolute inset-0 bg-white/30 rounded-[35px] blur-xl group-hover:bg-white/50 transition-all duration-500"></div>
+          <div className="absolute inset-0 bg-white/30 rounded-[35px] blur-xl group-hover:bg-white/40 transition-all duration-500"></div>
 
-          <div className="relative">
-            <img
-              src="https://i.pinimg.com/1200x/6e/59/95/6e599501252c23bcf02658617b29c894.jpg"
-              className="
-                    relative
-                    w-32 h-32 rounded-[35px] object-cover
-                    border-[5px] border-white/40
-                    shadow-2xl
-                    min-[800px]:w-[clamp(180px,20vw,260px)]
-                    min-[800px]:h-[clamp(180px,20vw,260px)]
-                    transform group-hover:scale-[1.03] transition-transform duration-500
-                "
-              alt="Profile"
-            />
+          <img
+            src={previewImage}
+            className="
+              relative
+              w-32 h-32 rounded-[35px] object-cover
+              border-[4px] border-white/30
+              shadow-2xl
+              min-[800px]:w-[clamp(180px,20vw,260px)]
+              min-[800px]:h-[clamp(180px,20vw,260px)]
+              transform group-hover:scale-[1.02] transition-transform duration-500
+            "
+            alt="Profile Avatar"
+          />
+        </div>
 
             {/* Camera Button Overlay */}
             <motion.button
@@ -99,40 +117,19 @@ export default function ProfileHeader({ user, onBack }) {
           className="mt-6 text-2xl md:text-3xl font-bold tracking-tight"
         >
           {user?.username || user?.name || "User"}
-        </motion.h2>
+        </h2>
 
-        <motion.p
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="mt-2 text-white/90 font-medium tracking-wide bg-white/15 px-5 py-2 rounded-full text-sm backdrop-blur-sm border border-white/20"
-        >
-          {user?.email || "user@example.com"}
-        </motion.p>
-
-        {/* Stats Section */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="mt-6 flex gap-6 items-center"
-        >
-          <div className="text-center">
-            <p className="text-2xl font-bold">127</p>
-            <p className="text-xs text-white/70 mt-1">Chats</p>
-          </div>
-          <div className="w-px h-10 bg-white/30"></div>
-          <div className="text-center">
-            <p className="text-2xl font-bold">48</p>
-            <p className="text-xs text-white/70 mt-1">Groups</p>
-          </div>
-          <div className="w-px h-10 bg-white/30"></div>
-          <div className="text-center">
-            <p className="text-2xl font-bold">892</p>
-            <p className="text-xs text-white/70 mt-1">Messages</p>
-          </div>
-        </motion.div>
+        <p className="mt-2 text-white/80 font-light tracking-wide bg-black/10 px-4 py-1 rounded-full text-sm backdrop-blur-sm">
+          {user?.phoneNumber || "No phone number added"}
+        </p>
       </div>
     </div>
   );
 }
+
+
+
+
+
+
+

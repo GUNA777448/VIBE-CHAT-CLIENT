@@ -1,23 +1,10 @@
 import React, { useState } from "react";
-import {
-  FiUser,
-  FiMail,
-  FiPhone,
-  FiLogOut,
-  FiChevronRight,
-  FiSettings,
-  FiBell,
-  FiLock,
-  FiMessageSquare,
-  FiHelpCircle,
-} from "react-icons/fi";
+import { FiUser, FiMail, FiPhone, FiLogOut, FiChevronRight } from "react-icons/fi";
 import { FaBirthdayCake } from "react-icons/fa";
 import { MdWc } from "react-icons/md";
-import { motion } from "framer-motion";
+import { FiHelpCircle } from "react-icons/fi";
 
-export default function ProfileMenu({ user, onLogout }) {
-  const [activeTab, setActiveTab] = useState("account");
-
+export default function ProfileMenu({ user, onLogout, onUpdateUser }) {
   return (
     <div
       className="
@@ -29,197 +16,215 @@ export default function ProfileMenu({ user, onLogout }) {
         min-[800px]:flex min-[800px]:flex-col min-[800px]:justify-center
       "
     >
-      <div className="space-y-6 max-w-md mx-auto w-full">
-        {/* Header with Tabs */}
-        <div className="mb-6">
-          <h3 className="text-2xl font-bold text-gray-800 mb-4 hidden min-[800px]:block">
-            Profile Settings
-          </h3>
+      <div className="space-y-4 max-w-md mx-auto w-full">
+        <h3 className="text-xl font-bold text-gray-800 mb-6 hidden min-[800px]:block">
+          Account Settings
+        </h3>
 
-          <div className="flex gap-2 bg-white p-1.5 rounded-2xl shadow-sm">
-            <TabButton
-              active={activeTab === "account"}
-              onClick={() => setActiveTab("account")}
-            >
-              Account
-            </TabButton>
-            <TabButton
-              active={activeTab === "privacy"}
-              onClick={() => setActiveTab("privacy")}
-            >
-              Privacy
-            </TabButton>
-            <TabButton
-              active={activeTab === "help"}
-              onClick={() => setActiveTab("help")}
-            >
-              Help
-            </TabButton>
-          </div>
-        </div>
+        {/* About */}
+        <EditableTextItem
+          icon={<FiUser />}
+          label="About"
+          value={user?.about || "Available"}
+          onSave={(val) => onUpdateUser({ about: val })}
+        />
 
-        {/* Account Tab */}
-        {activeTab === "account" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-3"
-          >
-            <SectionTitle>Personal Information</SectionTitle>
-            <MenuItem
-              icon={<FiUser />}
-              label="Username"
-              value={user?.username || user?.name || "User"}
-            />
-            <MenuItem
-              icon={<FiMail />}
-              label="Email"
-              value={user?.email || "user@example.com"}
-            />
-            <MenuItem
-              icon={<FiPhone />}
-              label="Phone"
-              value={user?.phoneNumber || "+1 234 567 8900"}
-            />
-            <MenuItem
-              icon={<FaBirthdayCake />}
-              label="Birthday"
-              value="Jan 1, 2000"
-            />
-            <MenuItem icon={<MdWc />} label="Gender" value="Male" />
+        {/* Email (Read Only) */}
+        <ReadOnlyMenuItem
+          icon={<FiMail />}
+          label="Email"
+          value={user?.email || "user@example.com"}
+        />
 
-            <SectionTitle className="mt-6">Account Settings</SectionTitle>
-            <MenuItem
-              icon={<FiSettings />}
-              label="Preferences"
-              value="Customize your experience"
-              isLink
-            />
-            <MenuItem
-              icon={<FiMessageSquare />}
-              label="Chat Settings"
-              value="Manage chat options"
-              isLink
-            />
-          </motion.div>
-        )}
+        {/* Date of Birth (Calendar) */}
+        <EditableDateItem
+          icon={<FaBirthdayCake />}
+          label="Birthday"
+          value={user?.birthday || ""}
+          onSave={(val) => onUpdateUser({ birthday: val })}
+        />
 
-        {/* Privacy Tab */}
-        {activeTab === "privacy" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-3"
-          >
-            <SectionTitle>Privacy & Security</SectionTitle>
-            <MenuItem
-              icon={<FiLock />}
-              label="Privacy Settings"
-              value="Control who can see your info"
-              isLink
-            />
-            <MenuItem
-              icon={<FiBell />}
-              label="Notifications"
-              value="Manage your notifications"
-              isLink
-            />
-            <MenuItem
-              icon={<FiSettings />}
-              label="Blocked Users"
-              value="View blocked contacts"
-              isLink
-            />
-            <MenuItem
-              icon={<FiLock />}
-              label="Two-Factor Auth"
-              value="Enhanced security"
-              isLink
-            />
-          </motion.div>
-        )}
+        {/* Gender Dropdown */}
+        <EditableSelectItem
+          icon={<MdWc />}
+          label="Gender"
+          value={user?.gender || "Male"}
+          options={["Male", "Female", "Prefer not to say"]}
+          onSave={(val) => onUpdateUser({ gender: val })}
+        />
 
-        {/* Help Tab */}
-        {activeTab === "help" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-3"
-          >
-            <SectionTitle>Support & Info</SectionTitle>
-            <MenuItem
-              icon={<FiHelpCircle />}
-              label="Help Center"
-              value="Get help and support"
-              isLink
-            />
-            <MenuItem
-              icon={<FiPhone />}
-              label="Contact Support"
-              value="Reach our team"
-              isLink
-            />
-            <MenuItem
-              icon={<FiMessageSquare />}
-              label="FAQs"
-              value="Frequently asked questions"
-              isLink
-            />
-            <MenuItem
-              icon={<FiSettings />}
-              label="App Info"
-              value="Version 2.1.0"
-            />
-          </motion.div>
-        )}
+        {/* Phone Number (updates ProfileHeader automatically 🔥) */}
+        <EditableTextItem
+          icon={<FiPhone />}
+          label="Phone"
+          value={user?.phoneNumber || ""}
+          onSave={(val) => onUpdateUser({ phoneNumber: val })}
+        />
 
-        {/* Logout Button */}
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="w-full mt-8 bg-gradient-to-r from-red-500 to-red-600 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-3 hover:from-red-600 hover:to-red-700 hover:shadow-lg transition-all duration-300 group cursor-pointer border-none shadow-md"
+
+        {/* Support Link */}
+        <LinkMenuItem icon={<FiHelpCircle />} label="Support" />
+
+        {/* Logout */}
+        <button
+          className="w-full mt-8 bg-red-50 text-red-500 py-3.5 rounded-2xl font-semibold flex items-center justify-center gap-2 hover:bg-red-100 hover:shadow-sm transition-all duration-300 group cursor-pointer border-none"
           onClick={onLogout}
         >
-          <FiLogOut className="group-hover:-translate-x-1 transition-transform text-lg" />
+          <FiLogOut className="group-hover:-translate-x-1 transition-transform" />
           Sign Out
-        </motion.button>
+        </button>
       </div>
     </div>
   );
 }
 
-function TabButton({ active, onClick, children }) {
+/* ---------------- EDITABLE TEXT ITEM ---------------- */
+
+function EditableTextItem({ icon, label, value, onSave }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [temp, setTemp] = useState(value);
+
+  const handleSave = () => {
+    setIsEditing(false);
+    onSave(temp);
+  };
+
   return (
-    <button
-      onClick={onClick}
-      className={`
-        flex-1 py-2.5 px-4 rounded-xl font-semibold text-sm transition-all duration-300 cursor-pointer border-none
-        ${
-          active
-            ? "bg-gradient-to-r from-[#5b7cfa] to-[#4b6cff] text-white shadow-md"
-            : "bg-transparent text-gray-600 hover:bg-gray-50"
-        }
-      `}
-    >
-      {children}
-    </button>
+    <BaseItem icon={icon} label={label}>
+      {isEditing ? (
+        <input
+          className="mt-1 px-2 py-1 border rounded-lg text-sm w-full"
+          value={temp}
+          onChange={(e) => setTemp(e.target.value)}
+        />
+      ) : (
+        <span className="text-xs text-gray-500 mt-0.5">{value || "Not added"}</span>
+      )}
+
+      {isEditing ? (
+        <button onClick={handleSave} className="text-xs font-semibold text-green-600">
+          Save
+        </button>
+      ) : (
+        <button
+          onClick={() => setIsEditing(true)}
+          className="hidden group-hover:flex text-xs font-semibold text-[#5b7cfa]"
+        >
+          Edit
+        </button>
+      )}
+    </BaseItem>
   );
 }
 
-function SectionTitle({ children, className = "" }) {
+/* ---------------- DATE PICKER ITEM ---------------- */
+
+function EditableDateItem({ icon, label, value, onSave }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [temp, setTemp] = useState(value);
+
+  const handleSave = () => {
+    setIsEditing(false);
+    onSave(temp);
+  };
+
   return (
-    <h4
-      className={`text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 mt-4 ${className}`}
-    >
-      {children}
-    </h4>
+    <BaseItem icon={icon} label={label}>
+      {isEditing ? (
+        <input
+          type="date"
+          className="mt-1 px-2 py-1 border rounded-lg text-sm w-full"
+          value={temp}
+          onChange={(e) => setTemp(e.target.value)}
+        />
+      ) : (
+        <span className="text-xs text-gray-500 mt-0.5">
+          {value || "Not added"}
+        </span>
+      )}
+
+      {isEditing ? (
+        <button onClick={handleSave} className="text-xs font-semibold text-green-600">
+          Save
+        </button>
+      ) : (
+        <button
+          onClick={() => setIsEditing(true)}
+          className="hidden group-hover:flex text-xs font-semibold text-[#5b7cfa]"
+        >
+          Edit
+        </button>
+      )}
+    </BaseItem>
   );
 }
 
-function MenuItem({ icon, label, value, isLink }) {
+/* ---------------- SELECT (GENDER) ITEM ---------------- */
+
+function EditableSelectItem({ icon, label, value, options, onSave }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [temp, setTemp] = useState(value);
+
+  const handleSave = () => {
+    setIsEditing(false);
+    onSave(temp);
+  };
+
+  return (
+    <BaseItem icon={icon} label={label}>
+      {isEditing ? (
+        <select
+          className="mt-1 px-2 py-1 border rounded-lg text-sm w-full"
+          value={temp}
+          onChange={(e) => setTemp(e.target.value)}
+        >
+          {options.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <span className="text-xs text-gray-500 mt-0.5">{value}</span>
+      )}
+
+      {isEditing ? (
+        <button onClick={handleSave} className="text-xs font-semibold text-green-600">
+          Save
+        </button>
+      ) : (
+        <button
+          onClick={() => setIsEditing(true)}
+          className="hidden group-hover:flex text-xs font-semibold text-[#5b7cfa]"
+        >
+          Edit
+        </button>
+      )}
+    </BaseItem>
+  );
+}
+
+/* ---------------- READ ONLY ITEM ---------------- */
+
+function ReadOnlyMenuItem({ icon, label, value }) {
+  return (
+    <div className="bg-white flex items-center justify-between px-5 py-4 rounded-2xl border border-gray-100">
+      <div className="flex items-center gap-4">
+        <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-[#5b7cfa] text-lg">
+          {icon}
+        </div>
+        <div className="flex flex-col items-start">
+          <span className="text-sm font-medium text-gray-900">{label}</span>
+          <span className="text-xs text-gray-500 mt-0.5">{value}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- LINK ITEM ---------------- */
+
+function LinkMenuItem({ icon, label }) {
   return (
     <motion.div
       whileHover={{ scale: 1.01, x: 2 }}
@@ -229,19 +234,40 @@ function MenuItem({ icon, label, value, isLink }) {
         <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center text-[#5b7cfa] text-lg group-hover:from-[#5b7cfa] group-hover:to-[#4b6cff] group-hover:text-white transition-all duration-300 shadow-sm">
           {icon}
         </div>
-        <div className="flex flex-col items-start">
-          <span className="text-sm font-semibold text-gray-900">{label}</span>
-          {value && <span className="text-xs text-gray-500 mt-1">{value}</span>}
-        </div>
+        <span className="text-sm font-medium text-gray-900">{label}</span>
       </div>
 
-      {isLink ? (
-        <FiChevronRight className="text-gray-400 group-hover:translate-x-1 group-hover:text-[#5b7cfa] transition-all" />
-      ) : (
-        <div className="opacity-0 group-hover:opacity-100 flex items-center text-xs font-bold text-[#5b7cfa] transition-opacity">
-          Edit
-        </div>
-      )}
-    </motion.div>
+      <FiChevronRight className="text-gray-400 group-hover:translate-x-1 transition-transform" />
+    </div>
   );
 }
+
+/* ---------------- BASE ITEM WRAPPER ---------------- */
+
+function BaseItem({ icon, label, children }) {
+  return (
+    <div className="group bg-white flex items-center justify-between px-5 py-4 rounded-2xl hover:shadow-md hover:bg-white transition-all duration-300 border border-transparent hover:border-gray-100">
+      <div className="flex items-center gap-4 w-full">
+        <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-[#5b7cfa] text-lg group-hover:bg-[#5b7cfa] group-hover:text-white transition-colors duration-300">
+          {icon}
+        </div>
+
+        <div className="flex flex-col items-start flex-grow">
+          <span className="text-sm font-medium text-gray-900">{label}</span>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
