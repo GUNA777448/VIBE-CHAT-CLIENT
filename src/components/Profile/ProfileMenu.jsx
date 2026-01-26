@@ -519,9 +519,12 @@ function ReadOnlyMenuItem({ icon, label, value }) {
 
 function LinkMenuItem({ icon, label }) {
   return (
-    <div className="group bg-white flex items-center justify-between px-5 py-4 rounded-2xl cursor-pointer hover:shadow-md hover:bg-white transition-all duration-300 border border-transparent hover:border-gray-100">
+    <motion.div
+      whileHover={{ scale: 1.01, x: 2 }}
+      className="group bg-white flex items-center justify-between px-5 py-4 rounded-2xl cursor-pointer hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-[#5b7cfa]/30"
+    >
       <div className="flex items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-[#5b7cfa] text-lg group-hover:bg-[#5b7cfa] group-hover:text-white transition-colors duration-300">
+        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center text-[#5b7cfa] text-lg group-hover:from-[#5b7cfa] group-hover:to-[#4b6cff] group-hover:text-white transition-all duration-300 shadow-sm">
           {icon}
         </div>
         <span className="text-sm font-medium text-gray-900">{label}</span>

@@ -72,49 +72,47 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../stores/useAuthStore";
-import ProfileHeader from "../components/Profile/ProfileHeader";
-import ProfileMenu from "../components/Profile/ProfileMenu";
 import { motion } from "framer-motion";
-import axios from "axios";
+import { useState } from "react";
+import {
+  FiPhone,
+  FiMail,
+  FiMapPin,
+  FiChevronLeft,
+  FiEdit2,
+  FiCamera,
+  FiSettings,
+  FiBell,
+  FiLock,
+  FiHelpCircle,
+  FiLogOut,
+  FiUser,
+  FiCheck,
+  FiMessageSquare,
+  FiImage,
+  FiShield,
+  FiNavigation,
+} from "react-icons/fi";
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaLinkedinIn,
+  FaInstagram,
+  FaGithub,
+} from "react-icons/fa";
+import { MdWc } from "react-icons/md";
+import { FaBirthdayCake } from "react-icons/fa";
+import { getUserLocation } from "../utils/location";
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { token, logout: logoutFromStore, updateUser } = useAuthStore();
+  const { user, logout: logoutFromStore } = useAuthStore();
+  const [activeTab, setActiveTab] = useState("profile");
+  const [location, setLocation] = useState("San Francisco, CA");
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
 
-  const [localUser, setLocalUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  /* ================= LOAD PROFILE FROM DATABASE ================= */
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:5000/api/auth/profile", // 🔴 change port if needed
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        setLocalUser(res.data);
-        updateUser(res.data); // sync Zustand
-        setLoading(false);
-      } catch (error) {
-        console.error("Failed to load profile:", error);
-        alert("Session expired. Please login again.");
-        logoutFromStore();
-        navigate("/login");
-      }
-    };
-
-    if (token) {
-      fetchProfile();
-    }
-  }, [token, updateUser, logoutFromStore, navigate]);
-
-  /* ================= LOGOUT ================= */
+  // 🔥 Local editable user state
+  const [localUser, setLocalUser] = useState(user);
 
   const handleLogout = () => {
     logoutFromStore();

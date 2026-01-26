@@ -290,10 +290,10 @@ export default function ProfileHeader({ user, onBack, onUpdateUser }) {
   return (
     <div
       className="
-        bg-gradient-to-br from-[#5b7cfa] to-[#4b6cff] text-white
+        bg-gradient-to-br from-[#5b7cfa] via-[#4b6cff] to-[#3a5ce8] text-white
         h-[40vh] w-full 
         rounded-b-[40px]
-        relative
+        relative overflow-hidden
         px-6 pt-6 pb-10
         flex flex-col
         md:h-full
@@ -309,11 +309,11 @@ export default function ProfileHeader({ user, onBack, onUpdateUser }) {
           onClick={onBack}
           className="text-white flex items-center gap-2 text-lg font-medium hover:opacity-80 transition"
         >
-          <div className="bg-white/20 p-2 rounded-full backdrop-blur-sm">
+          <div className="bg-white/20 p-2 rounded-full backdrop-blur-sm hover:bg-white/30 transition-all">
             <FiChevronLeft className="text-xl" />
           </div>
           <span className="hidden sm:inline">Back</span>
-        </button>
+        </motion.button>
 
         <button
           onClick={handleEditProfile}
